@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online image tools: compress images, remove backgrounds, extract text, and create avatars">
+    <meta name="keywords" content="image compressor, background remover, text extractor, avatar maker, image tools">
+    <title>ImageTools Pro - Compress, Edit & Convert Images</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --success: #4bb543;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 3rem 0;
+            text-align: center;
+            background-color: white;
+            margin-bottom: 2rem;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .tool-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+
+        .tool-content {
+            padding: 1.5rem;
+        }
+
+        .tool-content h3 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .tool-content p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Tool Sections */
+        .tool-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .tool-section.active {
+            display: block;
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tool-header h2 {
+            color: var(--primary);
+        }
+
+        .back-btn {
+            background-color: #e9ecef;
+            color: var(--dark);
+        }
+
+        .back-btn:hover {
+            background-color: #dee2e6;
+        }
+
+        .tool-interface {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .upload-area {
+            flex: 1;
+            min-width: 300px;
+            border: 2px dashed #ccc;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .options-area {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .option-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .option-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .option-group select, .option-group input {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        .preview-area {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #3a9e35;
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background-color: #e11574;
+        }
+
+        /* Ad Sections */
+        .ad-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .ad-placeholder {
+            background-color: #f8f9fa;
+            border: 1px dashed #dee2e6;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            color: var(--gray);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+                display: none;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .tool-interface {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🛠️</span>
+                    <h1>ImageTools Pro</h1>
+                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+                <nav>
+                    <ul id="navMenu">
+                        <li><a href="#" class="active">Home</a></li>
+                        <li><a href="#tools">Tools</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Powerful Image Tools for Everyone</h2>
+            <p>Compress, edit, convert, and enhance your images with our free online tools. No registration required!</p>
+            <a href="#tools" class="btn">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Ad Section -->
+    <section class="container">
+        <div class="ad-section">
+            <div class="ad-placeholder">
+                <!-- Google AdSense Ad Unit -->
+                <!-- Replace with your AdSense code -->
+                <p>Advertisement Space</p>
+                <p>Insert Google AdSense code here</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section class="container" id="tools">
+        <div class="tools-grid">
+            <!-- Image Compressor -->
+            <div class="tool-card" data-tool="compressor">
+                <div class="tool-icon">📦</div>
+                <div class="tool-content">
+                    <h3>Image Compressor</h3>
+                    <p>Reduce image file size without losing quality. Perfect for web and email.</p>
+                    <a href="#" class="btn use-tool-btn">Use Tool</a>
+                </div>
+            </div>
+
+            <!-- Background Remover -->
+            <div class="tool-card" data-tool="background-remover">
+                <div class="tool-icon">🧹</div>
+                <div class="tool-content">
+                    <h3>Background Remover</h3>
+                    <p>Remove image backgrounds automatically with AI technology.</p>
+                    <a href="#" class="btn use-tool-btn">Use Tool</a>
+                </div>
+            </div>
+
+            <!-- Image to Text -->
+            <div class="tool-card" data-tool="image-to-text">
+                <div class="tool-icon">🔤</div>
+                <div class="tool-content">
+                    <h3>Image to Text</h3>
+                    <p>Extract text from images using OCR technology.</p>
+                    <a href="#" class="btn use-tool-btn">Use Tool</a>
+                </div>
+            </div>
+
+            <!-- Avatar Maker -->
+            <div class="tool-card" data-tool="avatar-maker">
+                <div class="tool-icon">👤</div>
+                <div class="tool-content">
+                    <h3>Avatar Maker</h3>
+                    <p>Create custom avatars from your photos with various styles.</p>
+                    <a href="#" class="btn use-tool-btn">Use Tool</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tool Sections -->
+    <section class="container">
+        <!-- Image Compressor Tool -->
+        <div id="compressor-tool" class="tool-section">
+            <div class="tool-header">
+                <h2>Image Compressor</h2>
+                <button class="btn back-btn">Back to Tools</button>
+            </div>
+            <div class="tool-interface">
+                <div class="upload-area" id="compressor-upload">
+                    <div class="upload-icon">📤</div>
+                    <h3>Upload Image</h3>
+                    <p>Drag & drop or click to select an image</p>
+                    <input type="file" id="compressor-file" accept="image/*" style="display: none;">
+                </div>
+                <div class="options-area">
+                    <div class="option-group">
+                        <label for="compression-level">Compression Level</label>
+                        <select id="compression-level">
+                            <option value="low">Low Compression (High Quality)</option>
+                            <option value="medium" selected>Medium Compression</option>
+                            <option value="high">High Compression (Smaller Size)</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="output-format">Output Format</label>
+                        <select id="output-format">
+                            <option value="jpeg">JPEG</option>
+                            <option value="png">PNG</option>
+                            <option value="webp">WebP</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="max-width">Max Width (px)</label>
+                        <input type="number" id="max-width" value="1920" min="100" max="4000">
+                    </div>
+                    <div class="option-group">
+                        <label for="max-height">Max Height (px)</label>
+                        <input type="number" id="max-height" value="1080" min="100" max="4000">
+                    </div>
+                </div>
+            </div>
+            <div class="preview-area">
+                <h3>Preview</h3>
+                <div id="compressor-preview"></div>
+                <div class="action-buttons">
+                    <button class="btn btn-success" id="compress-btn">Compress Image</button>
+                    <button class="btn" id="compressor-download" disabled>Download</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Remover Tool -->
+        <div id="background-remover-tool" class="tool-section">
+            <div class="tool-header">
+                <h2>Background Remover</h2>
+                <button class="btn back-btn">Back to Tools</button>
+            </div>
+            <div class="tool-interface">
+                <div class="upload-area" id="bg-remover-upload">
+                    <div class="upload-icon">📤</div>
+                    <h3>Upload Image</h3>
+                    <p>Drag & drop or click to select an image</p>
+                    <input type="file" id="bg-remover-file" accept="image/*" style="display: none;">
+                </div>
+                <div class="options-area">
+                    <div class="option-group">
+                        <label for="bg-removal-method">Removal Method</label>
+                        <select id="bg-removal-method">
+                            <option value="auto">Automatic (AI)</option>
+                            <option value="manual">Manual Selection</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="bg-replacement">Background Replacement</label>
+                        <select id="bg-replacement">
+                            <option value="transparent">Transparent</option>
+                            <option value="white">White</option>
+                            <option value="black">Black</option>
+                            <option value="custom">Custom Color</option>
+                            <option value="image">Image Background</option>
+                        </select>
+                    </div>
+                    <div class="option-group" id="custom-bg-color" style="display: none;">
+                        <label for="bg-color">Background Color</label>
+                        <input type="color" id="bg-color" value="#ffffff">
+                    </div>
+                    <div class="option-group" id="bg-image-upload" style="display: none;">
+                        <label for="bg-image">Background Image</label>
+                        <input type="file" id="bg-image" accept="image/*">
+                    </div>
+                </div>
+            </div>
+            <div class="preview-area">
+                <h3>Preview</h3>
+                <div id="bg-remover-preview"></div>
+                <div class="action-buttons">
+                    <button class="btn btn-success" id="remove-bg-btn">Remove Background</button>
+                    <button class="btn" id="bg-remover-download" disabled>Download</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image to Text Tool -->
+        <div id="image-to-text-tool" class="tool-section">
+            <div class="tool-header">
+                <h2>Image to Text Converter</h2>
+                <button class="btn back-btn">Back to Tools</button>
+            </div>
+            <div class="tool-interface">
+                <div class="upload-area" id="text-extractor-upload">
+                    <div class="upload-icon">📤</div>
+                    <h3>Upload Image</h3>
+                    <p>Drag & drop or click to select an image with text</p>
+                    <input type="file" id="text-extractor-file" accept="image/*" style="display: none;">
+                </div>
+                <div class="options-area">
+                    <div class="option-group">
+                        <label for="language">Text Language</label>
+                        <select id="language">
+                            <option value="eng">English</option>
+                            <option value="spa">Spanish</option>
+                            <option value="fre">French</option>
+                            <option value="ger">German</option>
+                            <option value="chi">Chinese</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="output-format-text">Output Format</label>
+                        <select id="output-format-text">
+                            <option value="plain">Plain Text</option>
+                            <option value="word">Word Document</option>
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="text-font">Font Style</label>
+                        <select id="text-font">
+                            <option value="arial">Arial</option>
+                            <option value="times">Times New Roman</option>
+                            <option value="courier">Courier New</option>
+                            <option value="verdana">Verdana</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="preview-area">
+                <h3>Extracted Text</h3>
+                <textarea id="extracted-text" rows="8" style="width: 100%; padding: 1rem; border-radius: var(--border-radius); border: 1px solid #ddd;"></textarea>
+                <div class="action-buttons">
+                    <button class="btn btn-success" id="extract-text-btn">Extract Text</button>
+                    <button class="btn" id="text-download" disabled>Download Text</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Avatar Maker Tool -->
+        <div id="avatar-maker-tool" class="tool-section">
+            <div class="tool-header">
+                <h2>Avatar Maker</h2>
+                <button class="btn back-btn">Back to Tools</button>
+            </div>
+            <div class="tool-interface">
+                <div class="upload-area" id="avatar-upload">
+                    <div class="upload-icon">📤</div>
+                    <h3>Upload Photo</h3>
+                    <p>Drag & drop or click to select a photo</p>
+                    <input type="file" id="avatar-file" accept="image/*" style="display: none;">
+                </div>
+                <div class="options-area">
+                    <div class="option-group">
+                        <label for="avatar-style">Avatar Style</label>
+                        <select id="avatar-style">
+                            <option value="circular">Circular</option>
+                            <option value="rounded">Rounded Square</option>
+                            <option value="square">Square</option>
+                            <option value="hexagon">Hexagon</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="avatar-size">Avatar Size</label>
+                        <select id="avatar-size">
+                            <option value="small">Small (128x128)</option>
+                            <option value="medium" selected>Medium (256x256)</option>
+                            <option value="large">Large (512x512)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="option-group" id="custom-size" style="display: none;">
+                        <label for="avatar-width">Width (px)</label>
+                        <input type="number" id="avatar-width" value="256" min="50" max="1024">
+                        <label for="avatar-height">Height (px)</label>
+                        <input type="number" id="avatar-height" value="256" min="50" max="1024">
+                    </div>
+                    <div class="option-group">
+                        <label for="avatar-effects">Effects</label>
+                        <select id="avatar-effects">
+                            <option value="none">None</option>
+                            <option value="blur">Blur Background</option>
+                            <option value="vintage">Vintage</option>
+                            <option value="bw">Black & White</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="preview-area">
+                <h3>Avatar Preview</h3>
+                <div id="avatar-preview"></div>
+                <div class="action-buttons">
+                    <button class="btn btn-success" id="create-avatar-btn">Create Avatar</button>
+                    <button class="btn" id="avatar-download" disabled>Download Avatar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ad Section -->
+    <section class="container">
+        <div class="ad-section">
+            <div class="ad-placeholder">
+                <!-- Google AdSense Ad Unit -->
+                <!-- Replace with your AdSense code -->
+                <p>Advertisement Space</p>
+                <p>Insert Google AdSense code here</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ImageTools Pro</h3>
+                    <p>Free online image tools for everyone. Compress, edit, convert, and enhance your images with ease.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#tools">Image Compressor</a></li>
+                        <li><a href="#tools">Background Remover</a></li>
+                        <li><a href="#tools">Image to Text</a></li>
+                        <li><a href="#tools">Avatar Maker</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 ImageTools Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tool Navigation
+            var useToolButtons = document.querySelectorAll('.use-tool-btn');
+            useToolButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var toolCard = this.closest('.tool-card');
+                    var toolId = toolCard.getAttribute('data-tool');
+                    
+                    // Hide all tool sections
+                    var toolSections = document.querySelectorAll('.tool-section');
+                    toolSections.forEach(function(section) {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show selected tool
+                    document.getElementById(toolId + '-tool').classList.add('active');
+                    
+                    // Scroll to tool section
+                    document.getElementById(toolId + '-tool').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Back to tools buttons
+            var backButtons = document.querySelectorAll('.back-btn');
+            backButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    // Hide all tool sections
+                    var toolSections = document.querySelectorAll('.tool-section');
+                    toolSections.forEach(function(section) {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Scroll to tools grid
+                    document.getElementById('tools').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // File upload functionality
+            var uploadAreas = document.querySelectorAll('.upload-area');
+            uploadAreas.forEach(function(area) {
+                var fileInput = area.querySelector('input[type="file"]');
+                
+                area.addEventListener('click', function() {
+                    fileInput.click();
+                });
+                
+                area.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    area.style.borderColor = 'var(--primary)';
+                    area.style.backgroundColor = 'rgba(67, 97, 238, 0.05)';
+                });
+                
+                area.addEventListener('dragleave', function() {
+                    area.style.borderColor = '#ccc';
+                    area.style.backgroundColor = 'transparent';
+                });
+                
+                area.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    area.style.borderColor = '#ccc';
+                    area.style.backgroundColor = 'transparent';
+                    
+                    if (e.dataTransfer.files.length) {
+                        fileInput.files = e.dataTransfer.files;
+                        handleFileUpload(fileInput);
+                    }
+                });
+                
+                fileInput.addEventListener('change', function() {
+                    handleFileUpload(fileInput);
+                });
+            });
+
+            // Handle file upload and preview
+            function handleFileUpload(fileInput) {
+                var file = fileInput.files[0];
+                if (!file) return;
+                
+                var toolId = fileInput.id.split('-')[0];
+                var previewArea = document.getElementById(toolId + '-preview');
+                
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    previewArea.innerHTML = '<img src="' + e.target.result + '" class="preview-img" alt="Preview">';
+                    
+                    // Enable action buttons
+                    var downloadBtn = document.getElementById(toolId + '-download');
+                    if (downloadBtn) downloadBtn.disabled = false;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // Background replacement options toggle
+            document.getElementById('bg-replacement').addEventListener('change', function() {
+                var customColor = document.getElementById('custom-bg-color');
+                var bgImage = document.getElementById('bg-image-upload');
+                
+                if (this.value === 'custom') {
+                    customColor.style.display = 'block';
+                    bgImage.style.display = 'none';
+                } else if (this.value === 'image') {
+                    customColor.style.display = 'none';
+                    bgImage.style.display = 'block';
+                } else {
+                    customColor.style.display = 'none';
+                    bgImage.style.display = 'none';
+                }
+            });
+
+            // Avatar size options toggle
+            document.getElementById('avatar-size').addEventListener('change', function() {
+                var customSize = document.getElementById('custom-size');
+                
+                if (this.value === 'custom') {
+                    customSize.style.display = 'block';
+                } else {
+                    customSize.style.display = 'none';
+                }
+            });
+
+            // Action buttons functionality (simulated)
+            document.getElementById('compress-btn').addEventListener('click', function() {
+                alert('Image compression completed! Click Download to get your compressed image.');
+            });
+
+            document.getElementById('remove-bg-btn').addEventListener('click', function() {
+                alert('Background removed successfully! Click Download to get your image.');
+            });
+
+            document.getElementById('extract-text-btn').addEventListener('click', function() {
+                document.getElementById('extracted-text').value = "This is a simulated text extraction. In a real implementation, OCR technology would extract text from your uploaded image.\n\nSample extracted text:\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.";
+                document.getElementById('text-download').disabled = false;
+            });
+
+            document.getElementById('create-avatar-btn').addEventListener('click', function() {
+                alert('Avatar created successfully! Click Download to get your new avatar.');
+            });
+
+            // Mobile menu toggle
+            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+                document.getElementById('navMenu').classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
